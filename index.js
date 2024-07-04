@@ -179,6 +179,31 @@ function updateLikeCount(id) {
       }
 }
 
+function followUser(username){
+    var isFollowing = false;
+    var userLog = document.querySelector('#usernameBtn').textContent;
+    var database = firebase.database();
+    database.ref(`user/${username}/followers`).once('value', function(snapshot){
+        if(snapshot.exists()){
+            console.log(snapshot.val());
+            
+            alert("inside");
+            snapshot.val().forEach(function(data){
+                if(data == userLog){
+                    isFollowing = true;
+                    alert("Already folowing");
+                    return;
+                }
+            })
+            if(!isFollowing){
+                database.ref(`user/${username}/followers`).push(userLog);
+                alert('User followed');
+                userAccount(userLog);
+            }
+        }
+    })
+}
+
 var postedTime = []
 
 function userAccount(username){
@@ -188,21 +213,19 @@ function userAccount(username){
     var database = firebase.database();
     database.ref(`user/${user1}`).on('value', function(snapshot) {
         if(snapshot.exists()){
-            
             console.log(snapshot.val());
             var acc = snapshot.val();
             var pic = acc.img;
             var name = acc.name;
             var username = acc.username;
-
+            var logUser = document.querySelector('#usernameBtn').textContent;
             const userAccountDiv = document.getElementById('user_account');
-            userAccountDiv.classList.add('align-center', 'justify-center', 'mt-12', 'ml-96', 'px-12');
 
             const userProfileDiv = document.createElement('div');
             userProfileDiv.setAttribute('data-popover', '');
             userProfileDiv.setAttribute('id', 'user-profile');
             userProfileDiv.setAttribute('role', 'tooltip');
-            userProfileDiv.classList.add('flex', 'align-center', 'w-96', 'pl-12', 'py-10', 'p-6', 'text-sm', 'text-gray-500', 'bg-white', 'border-2', 'border-gray-200', 'rounded-lg', 'shadow-sm');
+            userProfileDiv.classList.add('flex', 'justify-content-center', 'place-content-center', 'object-center', 'w-96', 'pl-12', 'py-10', 'p-6', 'text-sm', 'text-gray-500', 'bg-white', 'border-2', 'border-gray-200', 'rounded-lg', 'shadow-sm');
 
             const innerDiv = document.createElement('div');
             innerDiv.classList.add('p-0');
@@ -219,11 +242,9 @@ function userAccount(username){
             profileImage.setAttribute('alt', 'Jese Leos');
             profileLink.appendChild(profileImage);
 
-            const followButton = document.createElement('button');
-            followButton.setAttribute('type', 'button');
-            followButton.classList.add('text-white', 'bg-blue-700', 'hover:bg-blue-800', 'focus:ring-4', 'focus:ring-blue-300', 'font-medium', 'rounded-lg', 'text-xs', 'px-3', 'py-1.5', 'focus:outline-none', 'dark:focus:ring-blue-800');
-            followButton.textContent = 'Follow';
-
+           
+            
+ 
             const pTag2 = document.createElement('p');
             pTag2.classList.add('text-base', 'font-semibold', 'leading-none', 'text-gray-900', 'ml-2')
             const nameLink = document.createElement('a');
@@ -268,28 +289,27 @@ function userAccount(username){
             followingLink.appendChild(document.createTextNode(' Following'));
             followingItem.appendChild(followingLink);
 
-            const followersItem = document.createElement('li');
-            const followersLink = document.createElement('a');
-            followersLink.setAttribute('href', '#');
-            followersLink.classList.add('hover:underline');
-            const followersCount = document.createElement('span');
-            followersCount.classList.add('font-semibold', 'text-gray-900', 'ml-2');
-            followersCount.textContent = '3,758';
-            followersLink.appendChild(followersCount);
-            followersLink.appendChild(document.createTextNode(' Followers'));
-            followersItem.appendChild(followersLink);
+        
 
             followersList.appendChild(followingItem);
-            followersList.appendChild(followersItem);
 
             flexItemsDiv.appendChild(profileLink);
-            flexItemsDiv.appendChild(followButton);
             innerDiv.appendChild(flexItemsDiv);
             innerDiv.appendChild(pTag2);
             innerDiv.appendChild(pTag);
             innerDiv.appendChild(loremIpsum);
             innerDiv.appendChild(followersList);
             userProfileDiv.appendChild(innerDiv);
+
+            if(logUser != username){
+                const followButton = document.createElement('button');
+                followButton.setAttribute('type', 'button');
+                followButton.classList.add('text-white', 'bg-blue-700', 'hover:bg-blue-800', 'focus:ring-4', 'focus:ring-blue-300', 'font-medium', 'rounded-lg', 'text-xs', 'px-3', 'py-1.5', 'focus:outline-none', 'dark:focus:ring-blue-800');
+                followButton.textContent = 'Follow';
+                followButton.addEventListener('click', () => followUser(username));
+                
+                flexItemsDiv.appendChild(followButton);
+            }
 
             const popperArrowDiv = document.createElement('div');
             popperArrowDiv.setAttribute('data-popper-arrow', '');
