@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#login_click').addEventListener('click', (e) => loginView());
     document.querySelector('#post-tweet').addEventListener('click', () => post_tweet());
     document.querySelector('#view-posts').addEventListener('click', () => viewPosts());
+    document.querySelector('#followBtn').addEventListener('click', () => viewFollowing());
     var username = document.querySelector('#usernameBtn').textContent;
     console.log("username is " + username);
     document.querySelector('#usernameBtn').addEventListener('click', () => userAccount(username));
@@ -27,14 +28,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
 }); 
 
+
 function viewPosts(){
     document.querySelector('#login').style.display = 'none';
     document.querySelector('#register').style.display = 'none';
     document.querySelector('#main').style.display = 'block';
     document.querySelector('#user_account').style.display = 'none';
-    
+    document.querySelector('#follow').style.display = 'none';
     document.querySelector('#content-post').style.display = 'block';
     document.querySelector('#view-posts').style.color = '#3B82F6';
+    
+    document.querySelector('#followBtn').style.color = 'black';
+    
     showTweets();
 
 }
@@ -47,13 +52,24 @@ function registerView(){
 
 function loginView(){
     if(document.querySelector('#login') && document.querySelector('#register') && document.querySelector('#main') ){
-        document.querySelector('#login').style.display = 'none';
+        document.querySelector('#login').style.display = 'block';
         document.querySelector('#register').style.display = 'none';
-        document.querySelector('#main').style.display = 'block';
+        document.querySelector('#main').style.display = 'none';
         document.querySelector('#content-post').style.display = 'none';
         document.querySelector('#submit_btn').addEventListener('click', (e) => log_in(e));
-        showTweets();
+        document.querySelector('#follow').style.display = 'none';
     }
+}
+
+function followingView(){
+    document.querySelector('#login').style.display = 'none';
+    document.querySelector('#register').style.display = 'none';
+    document.querySelector('#main').style.display = 'block';
+    document.querySelector('#user_account').style.display = 'none';
+    document.querySelector('#content-post').style.display = 'none';
+    document.querySelector('#follow').style.display = 'flex';
+    document.querySelector('#view-posts').style.color = 'black';
+    document.querySelector('#followBtn').style.color = '#3B82F6';
 }
 
 function userAccountView(){
@@ -62,7 +78,7 @@ function userAccountView(){
     document.querySelector('#main').style.display = 'block';
     document.querySelector('#user_account').style.display = 'block';
     document.querySelector('#content-post').style.display = 'none';
-
+    document.querySelector('#follow').style.display = 'none';
 }
 
 function log_in(e){
@@ -75,9 +91,8 @@ function log_in(e){
         if (snapshot.exists()) {
             if(snapshot.val().password == password){
                 viewPosts();
-                document.querySelector('#username').textContent = username;
-            
                 
+                document.querySelector('#usernameBtn').textContent = username;
             }else{
                 alert('Invalid password');   
             }
@@ -88,6 +103,7 @@ function log_in(e){
         console.error(error);
     });
 }
+
 
 function register(e){
     e.preventDefault();
@@ -179,6 +195,83 @@ function updateLikeCount(id) {
       }
 }
 
+function viewFollowing(){
+    followingView();
+    document.querySelector('#followingList').innerHTML = '';
+    var userLog = document.querySelector('#usernameBtn').textContent;
+    var database = firebase.database();
+    database.ref(`user/${userLog}/following`).once('value', function(snapshot){
+        if(snapshot.exists()){
+            console.log(snapshot.val());
+            var data = snapshot.val();
+            for(const key in data){
+                const item = data[key];
+                database.ref(`user/${item}`).once('value', function(snapshot){
+                    var user = snapshot.val();
+                    var name = user.name;
+                    var username = user.username;
+                    var pic = user.img;
+
+                    const followingList = document.querySelector('#followingList');
+                    followingList.classList.add('divide-y', 'divide-gray-200');
+                    // Create the list item element
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('py-3', 'sm:py-4');
+
+                    // Create the div with the "flex items-center" class
+                    const flexDiv = document.createElement('div');
+                    flexDiv.classList.add('flex', 'items-center');
+
+                    // Create the div with the "flex-shrink-0" class
+                    const flexShrinkDiv = document.createElement('div');
+                    flexShrinkDiv.classList.add('flex-shrink-0');
+
+                    // Create the button element
+                    const button = document.createElement('button');
+
+                    // Create the image element
+                    const image = document.createElement('img');
+                    image.classList.add('w-8', 'h-8', 'rounded-full');
+                    image.src = pic;
+                    image.alt = 'Image';
+
+                    // Append the image to the button
+                    button.appendChild(image);
+
+                    // Append the button to the "flex-shrink-0" div
+                    flexShrinkDiv.appendChild(button);
+
+                    // Create the div with the "flex-1 min-w-0 ms-4" class
+                    const flex1Div = document.createElement('div');
+                    flex1Div.classList.add('flex-1', 'min-w-0', 'ms-4');
+
+                    // Create the first paragraph element
+                    const firstParagraph = document.createElement('p');
+                    firstParagraph.classList.add('text-sm', 'font-medium', 'text-gray-900', 'truncate');
+                    firstParagraph.textContent = name;
+
+                    // Create the second paragraph element
+                    const secondParagraph = document.createElement('p');
+                    secondParagraph.classList.add('text-sm', 'text-gray-500', 'truncate', 'dark:text-gray-400');
+                    secondParagraph.textContent = `@${username}`;
+
+                    // Append the paragraphs to the "flex-1 min-w-0 ms-4" div
+                    flex1Div.appendChild(firstParagraph);
+                    flex1Div.appendChild(secondParagraph);
+
+                    flexDiv.appendChild(flexShrinkDiv);
+                    flexDiv.appendChild(flex1Div);
+
+                    listItem.appendChild(flexDiv);
+                    
+                    followingList.appendChild(listItem);
+                })
+
+            }
+        }
+    })
+}
+
 function followUser(username){
     var isFollowing = false;
     var userLog = document.querySelector('#usernameBtn').textContent;
@@ -186,24 +279,70 @@ function followUser(username){
     database.ref(`user/${username}/followers`).once('value', function(snapshot){
         if(snapshot.exists()){
             console.log(snapshot.val());
-            
-            alert("inside");
-            snapshot.val().forEach(function(data){
-                if(data == userLog){
+            var data = snapshot.val();
+            for(const key in data){
+                const item = data[key];
+                if(item == userLog){
                     isFollowing = true;
-                    alert("Already folowing");
-                    return;
+                    alert("Already folowing"); 
                 }
-            })
+            }
             if(!isFollowing){
                 database.ref(`user/${username}/followers`).push(userLog);
                 alert('User followed');
                 userAccount(userLog);
             }
         }
+        else {
+            database.ref(`user/${username}/followers`).push(userLog);
+            alert('User followed');
+            userAccount(userLog);
+        }
     })
+    isFollowing = false;
+    database.ref(`user/${userLog}/following`).once('value', function(snapshot){
+        if(snapshot.exists()){
+   
+            console.log(snapshot.val());
+            var data = snapshot.val();
+            for (const key in data) {
+                const item = data[key];
+                if(item == username){
+                    isFollowing = true;
+                    alert("Aalready folowing");
+                }
+            }
+            
+            if(!isFollowing){
+                database.ref(`user/${userLog}/following`).push(username);
+                alert('Uaser followed');
+                userAccount(userLog);
+            }
+        }
+        else {
+            database.ref(`user/${userLog}/following`).push(username);
+            alert('User followed');
+            userAccount(userLog);
+        }
+    })
+
 }
 
+function followingCounter(username){
+    var count = 0;
+    var database = firebase.database();
+    database.ref(`user/${username}/following`).once('value', function(snapshot){
+        if(snapshot.exists()){
+   
+            console.log(snapshot.val());
+            var data = snapshot.val();
+            for (const key in data) {
+                count += 1;
+            }
+        }
+    })
+    return count;
+}
 var postedTime = []
 
 function userAccount(username){
@@ -234,7 +373,7 @@ function userAccount(username){
             flexItemsDiv.classList.add('flex', 'items-center', 'justify-between', 'mb-2');
 
             const profileLink = document.createElement('a');
-            profileLink.setAttribute('href', '#');
+            profileLink.setAttribute('href', 'index.html');
 
             const profileImage = document.createElement('img');
             profileImage.classList.add('w-20', 'h-20', 'rounded-full');
@@ -248,7 +387,7 @@ function userAccount(username){
             const pTag2 = document.createElement('p');
             pTag2.classList.add('text-base', 'font-semibold', 'leading-none', 'text-gray-900', 'ml-2')
             const nameLink = document.createElement('a');
-            nameLink.setAttribute('href', '#');
+            nameLink.setAttribute('href', 'index.html');
             nameLink.classList.add('text-base', 'font-semibold', 'leading-none', 'text-gray-900')
             nameLink.textContent = name;
             pTag2.appendChild(nameLink);
@@ -260,7 +399,7 @@ function userAccount(username){
             pTag.classList.add('mb-3', 'text-sm', 'font-normal');
 
             const handleLink = document.createElement('a');
-            handleLink.setAttribute('href', '#');
+            handleLink.setAttribute('href', 'index.html');
             handleLink.classList.add('hover:underline', 'hover:text-blue-500', 'mb-3');
             handleLink.textContent = `@${username}`;
 
@@ -280,11 +419,14 @@ function userAccount(username){
 
             const followingItem = document.createElement('li');
             const followingLink = document.createElement('a');
-            followingLink.setAttribute('href', '#');
+            followingLink.setAttribute('href', 'javascript:void(0)');
+            if(username == document.querySelector('#usernameBtn').textContent){
+                followingLink.addEventListener('click', viewFollowing);
+            }
             followingLink.classList.add('hover:underline');
             const followingCount = document.createElement('span');
             followingCount.classList.add('font-semibold', 'text-gray-900');
-            followingCount.textContent = '799';
+            followingCount.textContent = followingCounter(username);
             followingLink.appendChild(followingCount);
             followingLink.appendChild(document.createTextNode(' Following'));
             followingItem.appendChild(followingLink);
@@ -343,6 +485,7 @@ function showTweets(){
                             var post_user = post.user;
                             var post_time = post.time_posted;
                             var pic = `profile1.png`, name;
+                            
                             database.ref(`user/${post_user}`).on(`value`, function(snapshot){
                                 if(snapshot.exists()){
                                     var user = snapshot.val()
