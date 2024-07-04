@@ -113,6 +113,15 @@
             <div class="mb-5">
                 <input
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Name"
+                />
+            </div>
+            <div class="mb-5">
+                <input
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 type="password"
                 name="password"
                 id="passwordreg"
@@ -145,8 +154,8 @@
             </p>
         </form>
     </div>
-    <div id="main" class=" relative h-screen w-screen ">
-        <nav class="bg-white border-gray-200 pr-0 border m-0">
+    <div id="main" class=" relative px-12 border  border-gray-200">
+        <nav class="bg-white pr-0 m-0">
         <div
             class="max-w-screen-xl flex flex-wrap items-center justify-between mt-0 mx-auto py-4"
         >
@@ -195,20 +204,19 @@
                 <li>
                 <div id="home" class="">
                 <li class="nav-item">
-                    <a
-                    id="username"
+                    <button
+                    id="usernameBtn"
                     class="block py-2 px-3 text-black bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-black md:dark:text-blue-500"
                     aria-current="page"
-                    href="#"
-                    ><strong>rhuelski29</strong></a
+                    ><strong>rhuelski29</strong></button
                     >
                 </li>
                 <li class="nav-item">
-                    <a
+                    <button
                     class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-black md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-black md:dark:hover:bg-transparent"
-                    href="index.html"
-                    >All Posts</a
-                    >
+                    id="view-posts"
+                    >All Posts</button>
+                    
                 </li>
                 <li class="nav-item">
                     <a
@@ -229,7 +237,7 @@
             </div>
         </div>
         </nav>
-        <div class="justify-center">
+        <div id="content-post" class="justify-center">
             <div class="w-screen grid items-center m-0 auto">
                 <div class="w-96 place-self-center justify-center blockmb-12">
                     <label
@@ -240,7 +248,7 @@
                     <textarea
                     id="post-content-text"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 max-h-14"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 lg:max-h-32 p-4 sm:p-6 sm:max-h-24 m:max-h-32 lg:p-8 h-auto"
                     placeholder="What's Happening?"
                     ></textarea>
                     <button
@@ -258,41 +266,6 @@
                     <div class="p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8">
                         <div class="flow-root">
                             <ul id="tweet_lists" role="list" class="divide-y divide-gray-200" >
-                                <li class="py-3 sm:py-4 h-fit">
-                                    <div class="relative flex items-center h-fit">
-                                        <div class="flex-shrink-0 absolute left-0 top-0 ">
-                                            <img class="w-8 h-8 rounded-full" src="profile (1).png">
-                                        </div>
-                                        <div class="flex-1 min-w-0 ml-12 h-fit">
-                                            <p class="text-sm font-medium text-gray-900 truncate ">
-                                            Neil Sims
-                                                <span class="text-sm text-gray-500 truncate ">@neilsims ·
-                                                    <span>
-                                                        3m
-                                                    </span>
-                                                </span>
-                                            </p>
-                                            <p class="text-sm font-light text-gray-900 overflow-hidden ">
-                                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores impedit dolor illo suscipit! Totam ipsum ex debitis similique mollitia velit.
-                                            </p>
-                                            <div class="flex items-center">
-                                                <button id="heart-button" class="focus:outline-none cursor-pointer mt-2 ml-0 align-left p-0 flex ">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 100 100">
-                                                        <path  d="M50,20
-                                                        C50,5 30,5 30,20
-                                                        C30,30 50,45 50,45
-                                                        C50,45 70,30 70,20
-                                                        C70,5 50,5 50,20
-                                                        Z"
-                                                        fill="white" stroke="black" stroke-width="2" class="p-0 m-0"/>
-                                                    </svg>
-                                                    <span id="heart-text" class="text-sm font-medium mt-0.5 p-0">Like</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -300,6 +273,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="user_account" class=" align-center justify-center mt-12 ml-96 px-12">
+        
     </div>
 
     <div class="body"></div>

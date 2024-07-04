@@ -68,3 +68,102 @@
     <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-database.js"></script>
   </body>
 </html>
+
+<div class="relative flex items-center h-fit">
+  <div class="flex-shrink-0 absolute left-0 top-0">
+    <img class="w-8 h-8 rounded-full" src="profile (1).png" />
+  </div>
+  <div class="flex-1 min-w-0 ml-12 h-fit">
+    <p class="text-sm font-medium text-gray-900 truncate">
+      Neil Sims
+      <span class="text-sm text-gray-500 truncate"
+        >@neilsims ·
+        <span> 3m </span>
+      </span>
+    </p>
+    <p class="text-sm font-light text-gray-900 overflow-hidden">
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores
+      impedit dolor illo suscipit! Totam ipsum ex debitis similique mollitia
+      velit.
+    </p>
+    <div class="flex items-center">
+      <button
+        id="heart-button"
+        class="focus:outline-none cursor-pointer mt-2 ml-0 align-left p-0 flex"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="50"
+          height="50"
+          viewBox="0 0 100 100"
+        >
+          <path
+            d="M50,20
+                  C50,5 30,5 30,20
+                  C30,30 50,45 50,45
+                  C50,45 70,30 70,20
+                  C70,5 50,5 50,20
+                  Z"
+            fill="white"
+            stroke="black"
+            stroke-width="2"
+            class="p-0 m-0"
+          />
+        </svg>
+        <span id="heart-text" class="text-sm font-medium mt-0.5 p-0">Like</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  data-popover
+  id="user-profile"
+  role="tooltip"
+  class="flex align-center w-96 pl-12 py-10 p-6 text-sm text-gray-500 bg-white border-2 border-gray-200 rounded-lg shadow-sm"
+>
+  <div class="p-0">
+    <div class="flex items-center justify-between mb-2">
+      <a href="#">
+        <img
+          class="w-20 h-20 rounded-full"
+          src="profile1.png"
+          alt="Jese Leos"
+        />
+      </a>
+      <div>
+        <button
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Follow
+        </button>
+      </div>
+    </div>
+    <p class="text-base font-semibold leading-none text-gray-900 ml-2">
+      <a href="#">Jese Leos</a>
+    </p>
+    <p class="mb-3 ml-2 text-sm font-normal">
+      <a href="#" class="hover:underline hover:text-blue-500">@jeseleos</a>
+    </p>
+    <p class="mb-4 text-sm">
+      Lorem ipsum dolor sit amet.
+      <a href="#" class="text-blue-600 hover:underline">flowbite.com</a>.
+    </p>
+    <ul class="flex text-sm">
+      <li class="me-2">
+        <a href="#" class="hover:underline">
+          <span class="font-semibold text-gray-900">799</span>
+          <span>Following</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="hover:underline">
+          <span class="font-semibold text-gray-900">3,758</span>
+          <span>Followers</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div data-popper-arrow></div>
+</div>
