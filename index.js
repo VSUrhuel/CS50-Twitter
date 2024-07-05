@@ -20,9 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#post-tweet').addEventListener('click', () => post_tweet());
     document.querySelector('#view-posts').addEventListener('click', () => viewPosts());
     document.querySelector('#followBtn').addEventListener('click', () => viewFollowing());
-    var username = document.querySelector('#usernameBtn').textContent;
-    console.log("username is " + username);
-    document.querySelector('#usernameBtn').addEventListener('click', () => userAccount(username));
     loginView();
     
     
@@ -93,6 +90,7 @@ function log_in(e){
                 viewPosts();
                 
                 document.querySelector('#usernameBtn').textContent = username;
+                document.querySelector('#usernameBtn').addEventListener('click', () => userAccount(username));
             }else{
                 alert('Invalid password');   
             }
@@ -130,7 +128,6 @@ function register(e){
                 img: `profile${Math.floor((Math.random() * 3) + 1)}.png`,
                 name: name
             });
-            alert('User created');
             loginView();
         }
     }).catch((error) => {
@@ -167,7 +164,6 @@ function temp(){
     database.ref('post').once('value').then(function(snapshot) {
         snapshot.forEach(function(data) {
             var post_id = data.key;
-           // alert(post_id);
            var name = `heart_button${post_id};`
            console.log(buttons[name]);
             const heart_button = buttons[name];
@@ -237,6 +233,7 @@ function viewFollowing(){
 
                     // Append the image to the button
                     button.appendChild(image);
+                    button.addEventListener('click', () => userAccount(username));
 
                     // Append the button to the "flex-shrink-0" div
                     flexShrinkDiv.appendChild(button);
@@ -284,18 +281,18 @@ function followUser(username){
                 const item = data[key];
                 if(item == userLog){
                     isFollowing = true;
-                    alert("Already folowing"); 
+                    alert(`You are alredy following @${username}`); 
                 }
             }
             if(!isFollowing){
                 database.ref(`user/${username}/followers`).push(userLog);
-                alert('User followed');
+                alert(`You are now following @${username}`);
                 userAccount(userLog);
             }
         }
         else {
             database.ref(`user/${username}/followers`).push(userLog);
-            alert('User followed');
+            alert(`You are now following @${username}`);
             userAccount(userLog);
         }
     })
@@ -309,19 +306,19 @@ function followUser(username){
                 const item = data[key];
                 if(item == username){
                     isFollowing = true;
-                    alert("Aalready folowing");
+                    alert(`You are now following @${username}`);
                 }
             }
             
             if(!isFollowing){
                 database.ref(`user/${userLog}/following`).push(username);
-                alert('Uaser followed');
+                alert(`You are now following @${username}`);
                 userAccount(userLog);
             }
         }
         else {
             database.ref(`user/${userLog}/following`).push(username);
-            alert('User followed');
+            alert(`You are now following @${username}`);
             userAccount(userLog);
         }
     })
@@ -347,6 +344,7 @@ var postedTime = []
 
 function userAccount(username){
     userAccountView();
+    console.log(username);
     document.getElementById('user_account').innerHTML = '';
     const user1 = username;
     var database = firebase.database();
@@ -373,7 +371,7 @@ function userAccount(username){
             flexItemsDiv.classList.add('flex', 'items-center', 'justify-between', 'mb-2');
 
             const profileLink = document.createElement('a');
-            profileLink.setAttribute('href', 'index.html');
+            profileLink.setAttribute('href', 'javascript:void(0)');
 
             const profileImage = document.createElement('img');
             profileImage.classList.add('w-20', 'h-20', 'rounded-full');
@@ -387,7 +385,7 @@ function userAccount(username){
             const pTag2 = document.createElement('p');
             pTag2.classList.add('text-base', 'font-semibold', 'leading-none', 'text-gray-900', 'ml-2')
             const nameLink = document.createElement('a');
-            nameLink.setAttribute('href', 'index.html');
+            nameLink.setAttribute('href', 'javascript:void(0)');
             nameLink.classList.add('text-base', 'font-semibold', 'leading-none', 'text-gray-900')
             nameLink.textContent = name;
             pTag2.appendChild(nameLink);
@@ -399,7 +397,7 @@ function userAccount(username){
             pTag.classList.add('mb-3', 'text-sm', 'font-normal');
 
             const handleLink = document.createElement('a');
-            handleLink.setAttribute('href', 'index.html');
+            handleLink.setAttribute('href', 'javascript:void(0)');
             handleLink.classList.add('hover:underline', 'hover:text-blue-500', 'mb-3');
             handleLink.textContent = `@${username}`;
 
@@ -409,7 +407,7 @@ function userAccount(username){
             loremIpsum.textContent = 'Lorem ipsum dolor sit amet. ';
             loremIpsum.classList.add('mb-4');
             const flowbiteLink = document.createElement('a');
-            flowbiteLink.setAttribute('href', '#');
+            flowbiteLink.setAttribute('href', 'javascript:void(0)');
             flowbiteLink.classList.add('text-blue-600', 'hover:underline');
             flowbiteLink.textContent = 'flowbite.com';
             loremIpsum.appendChild(flowbiteLink);
@@ -614,7 +612,6 @@ function showTweets(){
             })
         }
     })
-    //temp();
 }
 
 
@@ -651,11 +648,12 @@ function getLastIndex(){
     })
     return num+=1;
 }
+
 function post_tweet(){
     var num = getLastIndex();
     const content = document.querySelector('#post-content-text').value;
     document.querySelector('#post-content-text').value = '';
-    const username = document.querySelector('#username').textContent;
+    const username = document.querySelector('#usernameBtn').textContent;
     var database = firebase.database();
     database.ref(`post/${num}`).set({
         like: 0,
